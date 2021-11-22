@@ -135,9 +135,10 @@ def check_phone(request):
 
 			if phone.code == input_code:
 
-				return HttpResponse('200')
 				phone.cleared = True
 				phone.save()
+				return HttpResponse('200')
+				
 
 			else:
 				
