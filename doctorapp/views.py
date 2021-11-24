@@ -67,19 +67,23 @@ def make_an_appointment(request, uid):
 			input_name = request.GET.get('name')
 			input_surname = request.GET.get('surname')
 			input_phone = request.GET.get('phone')
+			phone = "7" +  input_phone.replace("(","").replace(")","").replace(" ","").replace("-", "")
 
 			input_date_of_birth = request.GET.get('date_of_birth')
 			date_of_birth = input_date_of_birth.replace('-','') + '000000'
 			data = {
 				"fields": {
-	                "date" : input_date,
+					"doctor"  : uid, 
+	                "date" : input_date + '000000',
 	                "time" : input_time,
 	                "name" : input_name,
 	                "surname" : input_surname,
-	                "phone" : input_phone,
+	                "phone" : phone,
 	                "date_of_birth" : date_of_birth
 	            }
 			}
+
+			# print(json.dumps(data))
 
 			answer = requests.post(url, headers=header, data=json.dumps(data))
 
@@ -101,6 +105,7 @@ def send_phone_to_check(request):
 		if phone and code:
 			phnChck = PhoneCheck(phone=phone, code=code)
 			phnChck.save()
+			# print(phnChck.code)
 
 			sms_text = 'НЕБОЛИТ. Код для входа {}'.format(code)
 
