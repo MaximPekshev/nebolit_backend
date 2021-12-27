@@ -12,12 +12,17 @@ from .models import PhoneCheck
 from decouple import config 
 
 
+def get_all_info(request):
+	url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getAllInfo'
+	header = {'Authorization' : config('1C_API_SECRET_KEY')}
+	answer = requests.get(url, headers=header)
+	return HttpResponse(answer)
+
 def get_doctors(request):
 
 	url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctors'
 	header = {'Authorization' : config('1C_API_SECRET_KEY')}
 	answer = requests.get(url, headers=header)
-
 	return HttpResponse(answer)
 
 def get_doctor_shedule(request, uid):
