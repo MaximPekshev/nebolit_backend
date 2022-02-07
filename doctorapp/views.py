@@ -17,45 +17,12 @@ def get_all_info(request):
 	header = {'Authorization' : config('1C_API_SECRET_KEY')}
 	answer = requests.get(url, headers=header)
 	return HttpResponse(answer)
-
-def get_doctors(request):
-
-	url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctors'
+	
+def get_doctor_info(request, uid):
+	url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctorInfo?doctor={}'.format(uid)
 	header = {'Authorization' : config('1C_API_SECRET_KEY')}
 	answer = requests.get(url, headers=header)
-	return HttpResponse(answer)
-
-def get_doctor_shedule(request, uid):
-	if uid:
-		url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctorSchedule?doctor={}'.format(uid)
-		header = {'Authorization' : config('1C_API_SECRET_KEY')}
-		answer = requests.get(url, headers=header)
-		
-		return HttpResponse(answer)
-
-
-def get_doctor_day_shedule(request, uid):
-
-	if request.method == 'GET':
-		if uid:
-
-			date = request.GET.get('date')
-
-			url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctorTime?doctor={}&date={}'.format(uid, date)
-			header = {'Authorization' : config('1C_API_SECRET_KEY')}
-			answer = requests.get(url, headers=header)
-			return HttpResponse(answer)
-
-
-def get_doctor_detail(request, uid):
-
-	if request.method == 'GET':
-		if uid:
-			url = 'https://1c.nebolitonline.ru/bit_med/hs/annasoft/api/v1/getDoctor?doctor={}'.format(uid)
-			header = {'Authorization' : config('1C_API_SECRET_KEY')}
-			answer = requests.get(url, headers=header)
-			return HttpResponse(answer)
-
+	return HttpResponse(answer)	
 
 def make_an_appointment(request, uid):
 	
