@@ -1,3 +1,4 @@
+from pickletools import read_uint1
 from django.shortcuts import render
 from django.http import HttpResponse
 from rest_framework import viewsets
@@ -34,7 +35,6 @@ def make_an_appointment(request, uid):
 			header = {'Authorization' : config('1C_API_SECRET_KEY')}
 
 			input_date = request.GET.get('date')
-			date = input_date.replace('-','') + '000000'
 			input_time = request.GET.get('time')
 			input_name = request.GET.get('name')
 			input_surname = request.GET.get('surname')
@@ -55,15 +55,11 @@ def make_an_appointment(request, uid):
 	            }
 			}
 
-			# print(json.dumps(data))
-
 			answer = requests.post(url, headers=header, data=json.dumps(data))
-
-			return HttpResponse('200')
-
-	return HttpResponse('500')	
-
-
+			if answer.status_code == '200':
+				return HttpResponse('200')
+			else:
+				return HttpResponse(answer.status_code)	
 
 def send_phone_to_check(request):
 
@@ -77,7 +73,6 @@ def send_phone_to_check(request):
 		if phone and code:
 			phnChck = PhoneCheck(phone=phone, code=code)
 			phnChck.save()
-			# print(phnChck.code)
 
 			sms_text = 'НЕБОЛИТ. Код для входа {}'.format(code)
 
@@ -90,10 +85,39 @@ def send_phone_to_check(request):
 					)
 
 			answer = requests.get(url)
+			if answer.status_code == '200':
+				return HttpResponse('200')
+			else:
+				return HttpResponse(answer.status_code)
 
-			return HttpResponse('200')
-		else:
-			return HttpResponse('500')
+def send_alert(request):
+
+	if request.method == 'GET':
+
+		input_phone = request.GET.get('phone')
+		input_name = request.GET.get('name')
+		input_surname = request.GET.get('surname')
+		client_name = input_surname + ' ' + input_name[0]
+		input_date = request.GET.get('date')
+		date = input_date[6:8] + '.' + input_date[4:6] + '.' + input_date[:4] + ' ' + input_date[8:10] + ':' + input_date[10:12]
+		input_docname = request.GET.get('docname').split()
+		doctor_name = input_docname[0] + ' ' + input_docname[1][0] + ' ' + input_docname[2][0]
+		phone = "7" +  input_phone.replace("(","").replace(")","").replace(" ","").replace("-", "")
+		if phone :
+			sms_text = 'Ув. {0}! Вы записаны {1}, Врач: {2}'.format(client_name, date, doctor_name)
+			url = 'https://gateway.api.sc/get/?user={0}&pwd={1}&sadr={2}&dadr={3}&text={4}'.format(
+						config('STREAM_LOGIN'),
+						config('STREAM_API_PASS'),
+						config('STREAM_SADR'),
+						phone,
+						sms_text,
+					)
+
+			answer = requests.get(url)
+			if answer.status_code == '200':
+				return HttpResponse('200')
+			else:
+				return HttpResponse(answer.status_code)
 
 		
 
@@ -115,10 +139,7 @@ def check_phone(request):
 				phone.cleared = True
 				phone.save()
 				return HttpResponse('200')
-				
-
 			else:
-				
 				return HttpResponse('500')	
 
 				
