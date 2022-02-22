@@ -56,6 +56,7 @@ def make_an_appointment(request, uid):
 			}
 
 			answer = requests.post(url, headers=header, data=json.dumps(data))
+			print(answer.status_code)
 			if answer.status_code == '200':
 				return HttpResponse('200')
 			else:
@@ -101,7 +102,31 @@ def send_alert(request):
 		input_date = request.GET.get('date')
 		date = input_date[6:8] + '.' + input_date[4:6] + '.' + input_date[:4] + ' ' + input_date[8:10] + ':' + input_date[10:12]
 		input_docname = request.GET.get('docname').split()
-		doctor_name = input_docname[0] + ' ' + input_docname[1][0] + ' ' + input_docname[2][0]
+
+		doctor_name = ''
+
+		if input_docname:
+
+			try:
+				str = input_docname[0]
+				if str:
+					doctor_name = doctor_name + input_docname[0]
+			except:
+				pass		
+
+			try:
+				str = input_docname[1]
+				if str:
+					doctor_name = doctor_name + ' ' + input_docname[1][0]
+			except:
+				pass
+			try:
+				str = input_docname[2]
+				if str:
+					doctor_name = doctor_name + ' ' + input_docname[2][0]
+			except:
+				pass		
+				
 		phone = "7" +  input_phone.replace("(","").replace(")","").replace(" ","").replace("-", "")
 		if phone :
 			sms_text = 'Ув. {0}! Вы записаны {1}, Врач: {2}'.format(client_name, date, doctor_name)
