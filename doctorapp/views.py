@@ -55,16 +55,17 @@ def make_an_appointment(request, uid):
 	            }
 			}
 
-			for i in range(10):
+			# for i in range(10):
+			return HttpResponse('200')
+			# answer = requests.post(url, headers=header, data=json.dumps(data))
 
-				answer = requests.post(url, headers=header, data=json.dumps(data))
+			# if answer.status_code == 200:
+			# 	return HttpResponse('200')
+			# else:
+			# 	return HttpResponse('500')
+				# time.sleep(1)	
 
-				if answer.status_code == '200':
-					return HttpResponse('200')
-
-				time.sleep(1)	
-
-			return HttpResponse(answer.status_code)	
+				
 
 def send_phone_to_check(request):
 
@@ -89,13 +90,13 @@ def send_phone_to_check(request):
 						sms_text,
 					)
 
-			for i in range(10):
-				answer = requests.get(url)
-				if answer.status_code == '200':
-					return HttpResponse('200')
-				time.sleep(1)	
-
-			return HttpResponse('500')
+			# for i in range(10):
+			answer = requests.get(url)
+			if answer.status_code == 200:
+				return HttpResponse('200')
+			else:
+				return HttpResponse('500')
+				# time.sleep(1)
 
 def send_alert(request):
 
@@ -144,13 +145,15 @@ def send_alert(request):
 						sms_text,
 					)
 
-			for i in range(10):
-				answer = requests.get(url)
-				if answer.status_code == '200':
-					return HttpResponse('200')
-				time.sleep(1)	
+			# for i in range(10):
+			answer = requests.get(url)
+			if answer.status_code == 200:
+				return HttpResponse('200')
+			else:
+				return HttpResponse('500')
+			# time.sleep(1)	
 			
-			return HttpResponse(answer.status_code)
+			# return HttpResponse(answer.status_code)
 
 		
 
