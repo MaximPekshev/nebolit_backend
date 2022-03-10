@@ -55,17 +55,12 @@ def make_an_appointment(request, uid):
 	            }
 			}
 
-			# for i in range(10):
-			return HttpResponse('200')
-			# answer = requests.post(url, headers=header, data=json.dumps(data))
+			answer = requests.post(url, headers=header, data=json.dumps(data))
+			if answer.status_code == 200:
+				return HttpResponse('200')
+			else:
+				return HttpResponse('500')
 
-			# if answer.status_code == 200:
-			# 	return HttpResponse('200')
-			# else:
-			# 	return HttpResponse('500')
-				# time.sleep(1)	
-
-				
 
 def send_phone_to_check(request):
 
@@ -96,7 +91,6 @@ def send_phone_to_check(request):
 				return HttpResponse('200')
 			else:
 				return HttpResponse('500')
-				# time.sleep(1)
 
 def send_alert(request):
 
